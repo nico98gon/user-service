@@ -19,8 +19,10 @@ WORKDIR /app
 COPY --from=builder /app/user-service .
 COPY --from=builder /go/bin/air /usr/local/bin/air
 
+# COPY wait-for-it.sh /wait-for-it.sh
+# RUN chmod +x /wait-for-it.sh
 RUN chmod +x ./user-service
 
 EXPOSE 8082
 
-CMD ["air", "-c", ".air.toml"]
+CMD ["/wait-for-it.sh", "postgres:5432", "--", "air", "-c", ".air.toml"]
